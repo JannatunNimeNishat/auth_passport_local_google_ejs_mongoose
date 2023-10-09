@@ -101,7 +101,7 @@ const checkLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
         // we can get the data of loggedIn user
         const user = req.user;
-        console.log('loggedIn',user);
+        console.log('loggedIn', user);
 
         return res.redirect("/profile");
     }
@@ -112,10 +112,10 @@ const checkLoggedIn = (req, res, next) => {
 
 //login : get
 app.get('/login', checkLoggedIn, (req, res) => {
-    
-   // we can get the data of loggedIn user
-     const user = req.user;
-    console.log('loggedIn',user); 
+
+    // we can get the data of loggedIn user
+    const user = req.user;
+    console.log('loggedIn', user);
 
     res.render("login");
 })
@@ -125,15 +125,23 @@ app.get('/login', checkLoggedIn, (req, res) => {
 // step 15 
 //modify this login post route according to passport-local Strategies
 //login : post
-app.post('/login', passport.authenticate("local",
+/* app.post('/login', passport.authenticate("local",
     {
         failureRedirect: '/login', //if login is unsuccessful redirect to login page
         successRedirect: '/profile', //if login is successful redirect to profile page 
     }),
-    /* (req, res) => {
-        const user = req.user;
-        console.log('loggedIn',user);
-    } */
+    
+); */
+
+
+app.post('/login', passport.authenticate("local",), function (req, res) {
+    if (req.isAuthenticated()) {
+        res.status(200).json({ user: req.user })
+    } else {
+        res.status(401).json({ message: "invalid username or password" })
+    }
+}
+
 );
 
 
